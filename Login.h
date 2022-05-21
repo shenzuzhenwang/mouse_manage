@@ -1,0 +1,37 @@
+#ifndef Login_H
+#define Login_H
+
+#include <QDialog>
+#include "Register.h"
+#include "DataBase.h"
+
+namespace Ui
+{
+class Login;
+}
+
+class Login : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit Login(QWidget *parent = 0);
+    ~Login();
+
+    void Clear();
+
+signals:
+    void LoginIn(QString name);
+
+private slots:
+    void on_button_login_clicked();
+
+    void on_button_register_clicked();
+
+private:
+    Ui::Login *ui;
+
+    void closeEvent (QCloseEvent *event);
+};
+
+#endif // Login_H
