@@ -13,25 +13,28 @@ namespace Ui
 class Main;
 }
 
+/**
+ * @brief 主界面类
+ */
 class Main : public QMainWindow
 {
     Q_OBJECT
 
 private:
-    Mouse *D_Mouse;
-    Login *D_Login;
-    Help *D_Help;
+    Mouse *D_Mouse;  // 详细信息与功能界面
+    Login *D_Login;  // 登录界面
+    Help *D_Help;    // 帮助界面
 
-    QSqlTableModel *M_mouse_death;
-    QSqlTableModel *M_feed;
-    QSqlTableModel *M_user;
-    QSqlTableModel *M_login;
+    QSqlTableModel *M_mouse_death;  // 死亡列表界面
+    QSqlTableModel *M_feed;         // 喂食记录页面
+    QSqlTableModel *M_user;         // 用户信息界面
+    QSqlTableModel *M_login;        // 登录记录页面
 
 public:
     explicit Main(QWidget *parent = 0);
     ~Main();
 
-private slots:
+private slots:  // GUI部件触发的函数
 
     void login_in(QString name);
 

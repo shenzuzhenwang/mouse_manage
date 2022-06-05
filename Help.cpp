@@ -1,15 +1,30 @@
+/*********************************************************************
+ * @file   Help.cpp
+ * @brief  显示帮助界面
+ *
+ * @version 1.1
+ * @author 左宇涵
+ * @date   2022.06.04
+ *
+ * @oldversion 1.0
+ * @oldauthor 左宇涵
+ * @date   2022.05.28
+ *********************************************************************/
+
 #include "Help.h"
-/*
- * Help类构造函数
- * 显示帮助信息
+
+/**
+ * @brief 帮助页面，帮助用户了解软件使用说明。
+ * @param QWidget 用户界面的原子：它从窗口系统接收鼠标、键盘和其他事件，并在屏幕上绘制自己的表示。
+ *
  */
 Help::Help(QWidget *parent)
     : QDialog(parent)
 {
-    layout = new QGridLayout(this);
-    text = new QTextBrowser();
-    layout->addWidget(text);
-    text->setText("使用帮助\n"
+    layout = new QGridLayout(this);//设置表格布局
+    text = new QTextBrowser();     //点击链接text
+    layout->addWidget(text);       //表格信息导入
+    text->setText("使用帮助\n"     //text内容
                   "\n"
                   "一、用户权限\n"
                   "  1.普通用户（权限为1）：\n"
@@ -55,11 +70,13 @@ Help::Help(QWidget *parent)
                   "五、注销\n"
                   "   点击注销按钮，回到登录界面\n"
                   "\n");
-    resize(800, 520);
-    setWindowFlags(Qt::Window);
-    setWindowTitle(tr("帮助"));
+    resize(800, 520);          //resize占用空间大小
+    setWindowFlags(Qt::Window);//创建窗口，有标题和边框
+    setWindowTitle(tr("帮助"));//窗口命名
 }
-
+/*
+*  @brief 析构函数
+*/
 Help::~Help()
 {
 }

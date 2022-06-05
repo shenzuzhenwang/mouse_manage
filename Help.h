@@ -1,7 +1,4 @@
-/********************************************************************************
-** 帮助界面类
-** 用于显示帮助界面
-********************************************************************************/
+
 #ifndef Help_H
 #define Help_H
 
@@ -9,6 +6,9 @@
 #include <QTextBrowser>
 #include <QLayout>
 
+/**
+ * @brief 帮助界面类
+ */
 class Help : public QDialog
 {
     Q_OBJECT
@@ -18,8 +18,8 @@ public:
     ~Help();
 
 private:
-    QTextBrowser* text;
-    QGridLayout* layout;
+    QTextBrowser* text;   // 显示的内容
+    QGridLayout* layout;  // 大小框架
 };
 
 #endif // Help_H

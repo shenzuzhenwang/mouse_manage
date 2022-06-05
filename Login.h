@@ -1,3 +1,11 @@
+/*********************************************************************
+ * @file   Login.h
+ * @brief  Login 类继承自QDialog，其对外暴露Login和Clear方法。
+ *
+ * @version 1.0
+ * @author  陆畅
+ * @date    2022.06.04
+ *********************************************************************/
 #ifndef Login_H
 #define Login_H
 
@@ -10,6 +18,9 @@ namespace Ui
 class Login;
 }
 
+/**
+ * @brief 登录界面类
+ */
 class Login : public QDialog
 {
     Q_OBJECT

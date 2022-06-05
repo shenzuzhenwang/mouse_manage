@@ -1,3 +1,18 @@
+/*********************************************************************
+ * @file   Main.cpp
+ * @brief 小鼠详细信息与功能界面，显示ID号、名称、描述、健康程度、负责人、出生日期和死亡日期，
+ *        并且具有喂食、出生、死亡、修改信息等功能
+ *
+ * @version 1.2
+ * @author 王鹏博
+ * @date   2022.06.04
+ * @old_version 1.0
+ * @old_author 王鹏博
+ * @date   2022.03.05
+ * @old_version 1.0
+ * @old_author 王鹏博
+ * @date   2022.01.01
+ *********************************************************************/
 #include "Mouse.h"
 #include "ui_Mouse.h"
 #include <QMessageBox>
@@ -5,25 +20,33 @@
 #include <QDebug>
 #include <QSqlError>
 
+ /*
+  * @brief 小鼠详细信息与功能界面初始化函数，加载选中小鼠的信息
+  */
 Mouse::Mouse(QWidget *parent) : QDialog(parent), ui(new Ui::Mouse)
 {
     ui->setupUi(this);
 
     setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint); // 窗口大小固定
 
-    Clear();
+    Clear();  // 清除上次的信息
 
     LoadToComboBox();
     ui->time_birth->setDateTime(QDateTime::currentDateTime());
     ui->time_lastmeal->setDateTime(QDateTime::currentDateTime());
 }
 
+/*
+ * @brief 析构界面
+ */
 Mouse::~Mouse()
 {
     delete ui;
 }
 
-
+/*
+ * @brief 清除界面中的各项信息
+ */
 void Mouse::Clear()
 {
     ui->box_ID->setCurrentText(" ");
@@ -35,6 +58,9 @@ void Mouse::Clear()
     ui->time_lastmeal->setDateTime(QDateTime::currentDateTime());
 }
 
+/*
+ * @brief 查看输入的ID格式
+ */
 bool Mouse::CheckInputs()
 {
     if (ui->edit_id->text().trimmed().isEmpty())
@@ -45,8 +71,12 @@ bool Mouse::CheckInputs()
     return true;
 }
 
+/*
+ * @brief 连接数据库，将小鼠的各项信息，加入到ComboBox成员中
+ */
 void Mouse::LoadToComboBox()
 {
+    // 执行一个sql语句"SELECT id FROM mouse ORDER BY id"，找到所有小鼠的id
     QSqlQuery query = DataBase::instance()->Query();
     query.exec("SELECT id FROM mouse ORDER BY id");
 
@@ -60,6 +90,7 @@ void Mouse::LoadToComboBox()
     }
     ui->box_ID->addItem(" ");
 
+    // 执行一个sql语句"SELECT name FROM user"，找到所有主人的名字
     query.exec("SELECT name FROM user");
 
     while (query.next())
@@ -78,8 +109,13 @@ void Mouse::LoadToComboBox()
     ui->box_health->addItem("极差");
 }
 
+/*
+ * @brief 连接数据库，通过小鼠的id，在数据库中查找小鼠的信息，并加载到界面
+ * @param id 带查询小鼠的id
+ */
 void Mouse::LoadMouse(const QString id)
 {
+    // 执行一个sql语句"SELECT * FROM mouse WHERE id = :id"，查找小鼠的信息
     QSqlQuery query = DataBase::instance()->Query();
     query.prepare(
         "SELECT * FROM "
@@ -120,20 +156,25 @@ void Mouse::LoadMouse(const QString id)
     }
 }
 
+/*
+ * @brief 小鼠出生功能，根据所选的信息，生成新的小鼠，并加入数据库中
+ */
 void Mouse::on_button_add_clicked()
 {
     if (CheckInputs())
     {
+        // 询问"确定出生吗？"
         QMessageBox::StandardButton reply = QMessageBox::question(this, "请问", "确定出生吗？", QMessageBox::Yes | QMessageBox::No);
 
         if (reply == QMessageBox::No)
         {
             return;
         }
-        else if (reply == QMessageBox::Yes)
+        else if (reply == QMessageBox::Yes)  // 确定出生
         {
             if (DataBase::instance()->IsOpen())
             {
+                // 执行一个sql语句"select mouse_birth (:id, :name, :master, :health, :description)"，调用数据库sql函数
                 QSqlQuery query = DataBase::instance()->Query();
 
                 query.prepare(
@@ -150,7 +191,7 @@ void Mouse::on_button_add_clicked()
                 {
                     if (query.first())
                     {
-                        if (query.value(0) == 1)
+                        if (query.value(0) == 1)  // sql函数mouse_birth调用成功
                         {
                             QMessageBox::information(this, "提示", "出生记录成功!");
                             qDebug() << "Database query OK." << query.lastQuery();
@@ -159,7 +200,7 @@ void Mouse::on_button_add_clicked()
                             RefreshMouse();
                             return;
                         }
-                        else
+                        else          // sql函数mouse_birth调用失败，主键id重复
                         {
                             QMessageBox::warning(this, "注意", "id编号重复!");
                             qDebug() << "id编号重复";
@@ -190,8 +231,12 @@ void Mouse::on_button_add_clicked()
     }
 }
 
+/*
+ * @brief 小鼠更改功能，根据所选的信息，更改指定id小鼠的信息，并上传数据库
+ */
 void Mouse::on_button_update_clicked()
 {
+    // 确定一个被更改的id的小鼠
     if (QString::compare(ui->edit_id->text().trimmed(), ui->box_ID->currentText(), Qt::CaseSensitive) != 0)
     {
         QMessageBox::warning(this, "注意", "更新的id应相同!");
@@ -201,16 +246,18 @@ void Mouse::on_button_update_clicked()
 
     if (CheckInputs())
     {
+        // 询问"确定要更改吗？"
         QMessageBox::StandardButton reply = QMessageBox::question(this, "请问", "确定要更改吗？", QMessageBox::Yes | QMessageBox::No);
 
         if (reply == QMessageBox::No)
         {
             return;
         }
-        else if (reply == QMessageBox::Yes)
+        else if (reply == QMessageBox::Yes)  // 确定更改
         {
             if (DataBase::instance()->IsOpen())
             {
+                // 执行一个sql语句"UPDATE mouse SET name = :name, description = :description , health = :health, master = :master WHERE id = :id"，调用数据库sql函数
                 QSqlQuery query = DataBase::instance()->Query();
 
                 query.prepare(
@@ -230,13 +277,13 @@ void Mouse::on_button_update_clicked()
                 {
                     if (query.isActive())
                     {
-                        if (query.numRowsAffected() <= 0)
+                        if (query.numRowsAffected() <= 0)  // 小鼠id不存在
                         {
                             QMessageBox::warning(this, "注意", "没有信息被更改!");
                             qDebug() << query.lastError();
                             return;
                         }
-                        RefreshMouse();
+                        RefreshMouse();       // 信息更改成功
                         LoadMouse(ui->box_ID->currentText());
                         QMessageBox::information(this, "提示", "更新信息成功!");
                         qDebug() << "Database query OK." << query.lastQuery();
@@ -260,18 +307,23 @@ void Mouse::on_button_update_clicked()
     }
 }
 
+/*
+ * @brief 小鼠死亡功能，根据所选的信息，死亡指定id小鼠，并上传数据库
+ */
 void Mouse::on_button_delete_clicked()
 {
+    // 询问"确定要死亡吗？"
     QMessageBox::StandardButton reply = QMessageBox::question(this, "请问", "确定要死亡吗？", QMessageBox::Yes | QMessageBox::No);
 
     if (reply == QMessageBox::No)
     {
         return;
     }
-    else if (reply == QMessageBox::Yes)
+    else if (reply == QMessageBox::Yes)  // 确定死亡
     {
         if (DataBase::instance()->IsOpen())
         {
+            // 执行一个sql语句"call mouse_dead(:id, :description)"，调用数据库sql函数
             QSqlQuery query = DataBase::instance()->Query();
 
             query.prepare(
@@ -285,13 +337,13 @@ void Mouse::on_button_delete_clicked()
             {
                 if (query.isActive())
                 {
-                    if (query.numRowsAffected() <= 0)
+                    if (query.numRowsAffected() <= 0)  // 小鼠id不存在
                     {
                         QMessageBox::warning(this, "注意", "没有小鼠死亡!");
                         qDebug() << query.lastError();
                         return;
                     }
-                    QMessageBox::information(this, "提示", "死亡记录成功!");
+                    QMessageBox::information(this, "提示", "死亡记录成功!");     // 死亡函数执行成功
                     qDebug() << "Database query OK." << query.lastQuery();
                     qDebug() << "Delete Mouse: " << ui->box_ID->currentText();
                     ui->box_ID->removeItem(ui->box_ID->currentIndex());
@@ -317,6 +369,10 @@ void Mouse::on_button_delete_clicked()
     }
 }
 
+/*
+ * @brief 切换至只读模式
+ * @param arg1 true 只读；false 可写
+ */
 void Mouse::on_check_readonly_stateChanged(int arg1)
 {
     ui->edit_id->setReadOnly(arg1);
@@ -326,11 +382,19 @@ void Mouse::on_check_readonly_stateChanged(int arg1)
     ui->box_master->setEnabled(!arg1);
 }
 
+/*
+ * @brief 根据选中的id加载小鼠的信息
+ * @param arg1 选中的id
+ */
 void Mouse::on_box_ID_activated(const QString &arg1)
 {
     LoadMouse(arg1);
 }
 
+/*
+ * @brief 小鼠的信息是否可更改
+ * @param arg1 true 可更改；fales 不可更改
+ */
 void Mouse::EnableChange(bool arg1)
 {
     ui->button_add->setEnabled(arg1);
@@ -343,6 +407,9 @@ void Mouse::EnableChange(bool arg1)
     ui->check_readonly->setEnabled(arg1);
 }
 
+/*
+ * @brief 小鼠喂食功能，根据所选的信息，喂食指定id小鼠，并上传数据库
+ */
 void Mouse::on_btn_feed_clicked()
 {
     QMessageBox::StandardButton reply = QMessageBox::question(this, "请问", "确定要喂食吗？", QMessageBox::Yes | QMessageBox::No);
@@ -355,6 +422,7 @@ void Mouse::on_btn_feed_clicked()
     {
         if (DataBase::instance()->IsOpen())
         {
+            // 执行一个sql语句"call feed_mouse(:id, :name)"，调用数据库sql函数
             QSqlQuery query = DataBase::instance()->Query();
 
             query.prepare(
@@ -368,13 +436,13 @@ void Mouse::on_btn_feed_clicked()
             {
                 if (query.isActive())
                 {
-                    if (query.numRowsAffected() <= 0)
+                    if (query.numRowsAffected() <= 0)  // 小鼠id不存在
                     {
                         QMessageBox::warning(this, "注意", "没有选中小鼠!");
                         qDebug() << query.lastError();
                         return;
                     }
-                    QMessageBox::information(this, "提示", "喂养成功!");
+                    QMessageBox::information(this, "提示", "喂养成功!");  // 喂养成功
                     qDebug() << "Database query OK.";
                     RefreshMouse();
                     RefreshFeed();

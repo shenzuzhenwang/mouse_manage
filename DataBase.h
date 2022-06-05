@@ -5,18 +5,21 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 
+/**
+ * @brief 数据库连接类
+ */
 class DataBase : public QObject
 {
     Q_OBJECT
 
 private:
-    QSqlDatabase m_db1;
-    QSqlDatabase m_db2;
-    QSqlDatabase m_db3;
-    int priority;
-    QSqlQuery query1;
-    QSqlQuery query2;
-    QSqlQuery query3;
+    QSqlDatabase m_db_normal;  // normal连接
+    QSqlDatabase m_db_senior;  // senior连接
+    QSqlDatabase m_db_admin;  // admin连接
+    int priority;  // 权限  1 normal 2 senior 3 admin
+    QSqlQuery query_normal;  // normal访问对象
+    QSqlQuery query_senior;  // senior访问对象
+    QSqlQuery query_admin;  // admin访问对象
 
 public:
     DataBase(QObject* parent = 0);

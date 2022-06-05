@@ -9,6 +9,9 @@ namespace Ui
 class Mouse;
 }
 
+/**
+ * @brief 详细信息与功能界面类
+ */
 class Mouse : public QDialog
 {
     Q_OBJECT
@@ -16,7 +19,7 @@ class Mouse : public QDialog
 public:
     explicit Mouse(QWidget *parent = 0);
     ~Mouse();
-    QString username;
+    QString username;  // 登录的用户名
 
     void Clear();
 
@@ -24,7 +27,7 @@ public:
 
     void EnableChange(bool arg1);
 
-signals:
+signals:  // 产生的信号，用于给主界面类
     void RefreshMouse();
     void RefreshMouseDeath();
     void RefreshFeed();
