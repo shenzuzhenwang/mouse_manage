@@ -1,7 +1,7 @@
 /*********************************************************************
  * @file   Regeister.c
  * @brief  给用户提供注册功能
- * 
+ *
  * @version 1.1
  * @author 左安民
  * @date   2022.06.06
@@ -43,7 +43,7 @@ Register::~Register()
  */
 bool Register::CheckInputs()
 {
-    
+
     QRegExp regexMail("\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b");//邮箱格式
     regexMail.setCaseSensitivity(Qt::CaseInsensitive); //大小写不敏感
 
@@ -60,7 +60,12 @@ bool Register::CheckInputs()
     {
         QMessageBox::warning(this, "注意", "密码不能为空");
         return false;
-    }//重复密码不为空
+    }//密码不为空
+    else if (ui->edit_password->text().trimmed().size() > 15)
+    {
+        QMessageBox::warning(this, "注意", "密码过长");
+        return false;
+    }//密码过长
     else if (ui->edit_password2->text().trimmed().isEmpty())
     {
         QMessageBox::warning(this, "注意", "重复密码不能为空");
