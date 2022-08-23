@@ -1,4 +1,4 @@
-/*********************************************************************
+﻿/*********************************************************************
  * @file   Main.cpp
  * @brief 小鼠管理系统主页面，包含小鼠信息界面、查询界面、死亡列表界面、
  *        喂食记录页面、登录记录页面、用户信息界面
@@ -98,7 +98,7 @@ Main::~Main()
 /*
  * @brief 主界面关闭，提示“确定退出吗”
  */
-void Main::closeEvent (QCloseEvent *event)
+void Main::closeEvent(QCloseEvent *event)
 {
     // 提示“确定退出吗”
     QMessageBox::StandardButton mboxSelect = QMessageBox::question(this, "退出", "确定退出吗",
@@ -237,7 +237,7 @@ void Main::LoadMain()
  */
 void Main::LoadMouse()
 {
-    QSqlQueryModel * queryModel = new QSqlQueryModel(this);
+    QSqlQueryModel *queryModel = new QSqlQueryModel(this);
 
     // 执行一个sql语句"SELECT name FROM user"，从用户信息表中找到用户名
     QSqlQuery query = DataBase::instance()->Query();
@@ -502,7 +502,7 @@ void Main::on_btn_search_clicked()
     QSqlQuery query = DataBase::instance()->Query();
     query.prepare(queryString);
 
-    QSqlQueryModel * queryModel = new QSqlQueryModel(this);
+    QSqlQueryModel *queryModel = new QSqlQueryModel(this);
 
     // 将数据库查询的结果，显示在GUI的表格中
     if (query.exec())

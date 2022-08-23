@@ -1,4 +1,4 @@
-/*********************************************************************
+﻿/*********************************************************************
  * @file   Login.h
  * @brief  Login 类继承自QDialog，其对外暴露Login和Clear方法。
  *
@@ -42,7 +42,7 @@ private slots:
 private:
     Ui::Login *ui;
 
-    void closeEvent (QCloseEvent *event);
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // Login_H

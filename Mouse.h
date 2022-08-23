@@ -1,4 +1,4 @@
-#ifndef Mouse_H
+ï»¿#ifndef Mouse_H
 #define Mouse_H
 
 #include <QDialog>
@@ -10,7 +10,7 @@ class Mouse;
 }
 
 /**
- * @brief ÏêÏ¸ĞÅÏ¢Óë¹¦ÄÜ½çÃæÀà
+ * @brief è¯¦ç»†ä¿¡æ¯ä¸åŠŸèƒ½ç•Œé¢ç±»
  */
 class Mouse : public QDialog
 {
@@ -19,7 +19,7 @@ class Mouse : public QDialog
 public:
     explicit Mouse(QWidget *parent = 0);
     ~Mouse();
-    QString username;  // µÇÂ¼µÄÓÃ»§Ãû
+    QString username;  // ç™»å½•çš„ç”¨æˆ·å
 
     void Clear();
 
@@ -27,7 +27,7 @@ public:
 
     void EnableChange(bool arg1);
 
-signals:  // ²úÉúµÄĞÅºÅ£¬ÓÃÓÚ¸øÖ÷½çÃæÀà
+signals:  // äº§ç”Ÿçš„ä¿¡å·ï¼Œç”¨äºç»™ä¸»ç•Œé¢ç±»
     void RefreshMouse();
     void RefreshMouseDeath();
     void RefreshFeed();

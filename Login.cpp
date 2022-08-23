@@ -1,4 +1,4 @@
-/*********************************************************************
+﻿/*********************************************************************
  * @file   Login.cpp
  * @brief  用于 Qt 窗口登录、注册用户相关
  *         这里会访问数据库以查找定位用户
@@ -55,10 +55,10 @@ void Login::Clear()
  * @brief 用于 Qt 程序关闭时触发的事件
  * @param event 接受 Qt 程序关闭事件的详细内容
  */
-void Login::closeEvent (QCloseEvent *event)
+void Login::closeEvent(QCloseEvent *event)
 {
     //弹窗询问用户是否真的要退出，二次确认
-    QMessageBox::StandardButton mboxSelect = QMessageBox::question( this, "退出", "确定退出吗",
+    QMessageBox::StandardButton mboxSelect = QMessageBox::question(this, "退出", "确定退出吗",
             QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes, QMessageBox::Yes);
 
     if (mboxSelect != QMessageBox::Yes)
@@ -102,7 +102,7 @@ void Login::on_button_login_clicked()
     {
         if (query.first())
         {
-            if (query.value(0) > 0)
+            if (query.value(0).toInt() > 0)
             {
                 ui->label_status->setText("登录成功");
                 DataBase::instance()->ChangePriority(query.value(0).toInt());

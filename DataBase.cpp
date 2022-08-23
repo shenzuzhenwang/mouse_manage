@@ -1,4 +1,4 @@
-/*********************************************************************
+﻿/*********************************************************************
  * @file   DataBase.cpp
  * @brief  数据库连接，创建了三个不同权限的连接
  *
@@ -16,7 +16,7 @@
   * @brief 构造函数，默认权限是1
   * @param QObject Qt的对象的父类
   */
-DataBase::DataBase(QObject* parent): QObject(parent)
+DataBase::DataBase(QObject *parent): QObject(parent)
 {
     priority = 1;
 }
@@ -29,10 +29,11 @@ DataBase::~DataBase()
     m_db_senior.close();
     m_db_admin.close();
 }
+
 /**
   * @brief 当前连接的数据库
   */
-DataBase* DataBase::instance()  // 所有只使用一个静态对象
+DataBase *DataBase::instance()  // 所有只使用一个静态对象
 {
     static DataBase db_controller;
     return &db_controller;
@@ -42,24 +43,24 @@ DataBase* DataBase::instance()  // 所有只使用一个静态对象
   */
 void DataBase::SetupDB()
 {
-    m_db_admin = QSqlDatabase::addDatabase("QODBC");
-    m_db_admin.setHostName("localhost");
-    m_db_admin.setPort(3306);
-    m_db_admin.setDatabaseName("normal");
+    m_db_admin = QSqlDatabase::addDatabase("QSQLITE");
+    //    m_db_admin.setHostName("localhost");
+    //    m_db_admin.setPort(3306);
+    m_db_admin.setDatabaseName("D:/QT/QTproject/mouse_manage/mouse_manage.db");
     m_db_admin.setUserName("normal");
     m_db_admin.setPassword("normal");
 
-    m_db_senior = QSqlDatabase::addDatabase("QODBC", "senior");
-    m_db_senior.setHostName("localhost");
-    m_db_senior.setPort(3306);
-    m_db_senior.setDatabaseName("senior");
+    m_db_senior = QSqlDatabase::addDatabase("QSQLITE", "senior");
+    //    m_db_senior.setHostName("localhost");
+    //    m_db_senior.setPort(3306);
+    m_db_senior.setDatabaseName("D:/QT/QTproject/mouse_manage/mouse_manage.db");
     m_db_senior.setUserName("senior");
     m_db_senior.setPassword("senior");
 
-    m_db_admin = QSqlDatabase::addDatabase("QODBC", "admin");
-    m_db_admin.setHostName("localhost");
-    m_db_admin.setPort(3306);
-    m_db_admin.setDatabaseName("admin");
+    m_db_admin = QSqlDatabase::addDatabase("QSQLITE", "admin");
+    //    m_db_admin.setHostName("localhost");
+    //    m_db_admin.setPort(3306);
+    m_db_admin.setDatabaseName("D:/QT/QTproject/mouse_manage/mouse_manage.db");
     m_db_admin.setUserName("admin");
     m_db_admin.setPassword("admin");
 
@@ -82,7 +83,7 @@ bool DataBase::IsOpen()
     return m_db_admin.isOpen();
 }
 /**
-  * @brief 判断数据库是否链接
+  * @brief 连接数据库
   * @return true 成功连接；false 连接断开
   */
 bool DataBase::Connect()
@@ -143,7 +144,7 @@ QString DataBase::GetError()
   * @brief 获取现在使用的访问对象
   * @return 使用的访问对象
   */
-QSqlQuery& DataBase::Query()
+QSqlQuery &DataBase::Query()
 {
     if (priority == 1)
         return query_normal;
@@ -157,7 +158,7 @@ QSqlQuery& DataBase::Query()
   * @brief 获取现在使用的数据库对象
   * @return 使用的数据库
   */
-QSqlDatabase& DataBase::GetDatabase()
+QSqlDatabase &DataBase::GetDatabase()
 {
     if (priority == 1)
         return m_db_admin;

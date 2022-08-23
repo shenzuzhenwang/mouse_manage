@@ -1,4 +1,4 @@
-#ifndef FRMMAIN_H
+ï»¿#ifndef FRMMAIN_H
 #define FRMMAIN_H
 
 #include <QMainWindow>
@@ -14,27 +14,27 @@ class Main;
 }
 
 /**
- * @brief Ö÷½çÃæÀà
+ * @brief ä¸»ç•Œé¢ç±»
  */
 class Main : public QMainWindow
 {
     Q_OBJECT
 
 private:
-    Mouse *D_Mouse;  // ÏêÏ¸ĞÅÏ¢Óë¹¦ÄÜ½çÃæ
-    Login *D_Login;  // µÇÂ¼½çÃæ
-    Help *D_Help;    // °ïÖú½çÃæ
+    Mouse *D_Mouse;  // è¯¦ç»†ä¿¡æ¯ä¸åŠŸèƒ½ç•Œé¢
+    Login *D_Login;  // ç™»å½•ç•Œé¢
+    Help *D_Help;    // å¸®åŠ©ç•Œé¢
 
-    QSqlTableModel *M_mouse_death;  // ËÀÍöÁĞ±í½çÃæ
-    QSqlTableModel *M_feed;         // Î¹Ê³¼ÇÂ¼Ò³Ãæ
-    QSqlTableModel *M_user;         // ÓÃ»§ĞÅÏ¢½çÃæ
-    QSqlTableModel *M_login;        // µÇÂ¼¼ÇÂ¼Ò³Ãæ
+    QSqlTableModel *M_mouse_death;  // æ­»äº¡åˆ—è¡¨ç•Œé¢
+    QSqlTableModel *M_feed;         // å–‚é£Ÿè®°å½•é¡µé¢
+    QSqlTableModel *M_user;         // ç”¨æˆ·ä¿¡æ¯ç•Œé¢
+    QSqlTableModel *M_login;        // ç™»å½•è®°å½•é¡µé¢
 
 public:
     explicit Main(QWidget *parent = 0);
     ~Main();
 
-private slots:  // GUI²¿¼ş´¥·¢µÄº¯Êı
+private slots:  // GUIéƒ¨ä»¶è§¦å‘çš„å‡½æ•°
 
     void login_in(QString name);
 

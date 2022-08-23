@@ -44,3 +44,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     logo.qrc
+
+win32-msvc* {
+    QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
+}

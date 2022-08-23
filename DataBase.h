@@ -1,4 +1,4 @@
-#ifndef DBCONTROLLER_H
+ï»¿#ifndef DBCONTROLLER_H
 #define DBCONTROLLER_H
 
 #include <QObject>
@@ -6,28 +6,29 @@
 #include <QSqlQuery>
 
 /**
- * @brief Êı¾İ¿âÁ¬½ÓÀà
+ * @brief æ•°æ®åº“è¿æ¥ç±»
  */
 class DataBase : public QObject
 {
     Q_OBJECT
 
 private:
-    QSqlDatabase m_db_normal;  // normalÁ¬½Ó
-    QSqlDatabase m_db_senior;  // seniorÁ¬½Ó
-    QSqlDatabase m_db_admin;  // adminÁ¬½Ó
-    int priority;  // È¨ÏŞ  1 normal 2 senior 3 admin
-    QSqlQuery query_normal;  // normal·ÃÎÊ¶ÔÏó
-    QSqlQuery query_senior;  // senior·ÃÎÊ¶ÔÏó
-    QSqlQuery query_admin;  // admin·ÃÎÊ¶ÔÏó
+    QSqlDatabase m_db_normal;  // normalè¿æ¥
+    QSqlDatabase m_db_senior;  // seniorè¿æ¥
+    QSqlDatabase m_db_admin;  // adminè¿æ¥
+    int priority;  // æƒé™  1 normal 2 senior 3 admin
+    QSqlQuery query_normal;  // normalè®¿é—®å¯¹è±¡
+    QSqlQuery query_senior;  // seniorè®¿é—®å¯¹è±¡
+    QSqlQuery query_admin;  // adminè®¿é—®å¯¹è±¡
+
 
 public:
-    DataBase(QObject* parent = 0);
+    DataBase(QObject *parent = 0);
     ~DataBase();
 
     void SetupDB();
 
-    QSqlQuery& Query();
+    QSqlQuery &Query();
 
     bool IsOpen();
 
@@ -41,9 +42,9 @@ public:
 
     int GetPriority();
 
-    QSqlDatabase& GetDatabase();
+    QSqlDatabase &GetDatabase();
 
-    static DataBase* instance();
+    static DataBase *instance();
 };
 
 #endif
