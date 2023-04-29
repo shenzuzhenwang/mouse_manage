@@ -1,6 +1,4 @@
-QT       += core gui sql
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT       += core gui sql widgets
 
 CONFIG += c++11
 
@@ -44,7 +42,3 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     logo.qrc
-
-win32-msvc* {
-    QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
-}

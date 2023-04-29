@@ -1,4 +1,4 @@
-﻿
+
 #ifndef Help_H
 #define Help_H
 

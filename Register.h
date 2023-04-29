@@ -1,8 +1,7 @@
-﻿#ifndef Register_H
+#ifndef Register_H
 #define Register_H
 
 #include <QDialog>
-#include "DataBase.h"
 
 //namespace UI里定义Regeister类
 namespace Ui

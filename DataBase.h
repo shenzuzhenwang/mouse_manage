@@ -1,4 +1,4 @@
-﻿#ifndef DBCONTROLLER_H
+#ifndef DBCONTROLLER_H
 #define DBCONTROLLER_H
 
 #include <QObject>
@@ -17,18 +17,17 @@ private:
     QSqlDatabase m_db_senior;  // senior连接
     QSqlDatabase m_db_admin;  // admin连接
     int priority;  // 权限  1 normal 2 senior 3 admin
-    QSqlQuery query_normal;  // normal访问对象
-    QSqlQuery query_senior;  // senior访问对象
-    QSqlQuery query_admin;  // admin访问对象
-
+//    QSqlQuery query_normal;  // normal访问对象
+//    QSqlQuery query_senior;  // senior访问对象
+//    QSqlQuery query_admin;  // admin访问对象
 
 public:
-    DataBase(QObject *parent = 0);
+    DataBase(QObject* parent = 0);
     ~DataBase();
 
     void SetupDB();
 
-    QSqlQuery &Query();
+//    QSqlQuery& Query();
 
     bool IsOpen();
 
@@ -42,9 +41,9 @@ public:
 
     int GetPriority();
 
-    QSqlDatabase &GetDatabase();
+    QSqlDatabase& GetDatabase();
 
-    static DataBase *instance();
+    static DataBase* instance();
 };
 
 #endif

@@ -1,12 +1,11 @@
-﻿#ifndef FRMMAIN_H
+#ifndef FRMMAIN_H
 #define FRMMAIN_H
 
-#include <QMainWindow>
+#include <QtWidgets>
 #include <QSqlTableModel>
 #include "Mouse.h"
 #include "Login.h"
 #include "Help.h"
-#include "DataBase.h"
 
 namespace Ui
 {

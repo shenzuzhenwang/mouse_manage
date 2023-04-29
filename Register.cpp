@@ -1,7 +1,7 @@
-﻿/*********************************************************************
+/*********************************************************************
  * @file   Regeister.c
  * @brief  给用户提供注册功能
- *
+ * 
  * @version 1.1
  * @author 左安民
  * @date   2022.06.06
@@ -12,11 +12,14 @@
 
 #include "Register.h"
 #include "ui_Register.h"
+
 #include <QMessageBox>
 #include <QSqlQuery>
 #include <QDebug>
 #include <QSqlError>
-#include <QRegExp>
+#include <QRegularExpression>
+
+#include "DataBase.h"
 
 /**
  * @brief 打开窗口
@@ -43,12 +46,10 @@ Register::~Register()
  */
 bool Register::CheckInputs()
 {
+    
+    static QRegularExpression regexMail("\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b", QRegularExpression::CaseInsensitiveOption);//邮箱格式 大小写不敏感
 
-    QRegExp regexMail("\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b");//邮箱格式
-    regexMail.setCaseSensitivity(Qt::CaseInsensitive); //大小写不敏感
-
-    QRegExp regexPhone("^[0-9]{8,11}$");//电话格式
-    regexPhone.setCaseSensitivity(Qt::CaseInsensitive);//大小写不敏感
+    static QRegularExpression regexPhone("^[0-9]{8,11}$", QRegularExpression::CaseInsensitiveOption);//电话格式 大小写不敏感
 
     //名字不为空
     if (ui->edit_name->text().trimmed().isEmpty())
@@ -60,12 +61,7 @@ bool Register::CheckInputs()
     {
         QMessageBox::warning(this, "注意", "密码不能为空");
         return false;
-    }//密码不为空
-    else if (ui->edit_password->text().trimmed().size() > 15)
-    {
-        QMessageBox::warning(this, "注意", "密码过长");
-        return false;
-    }//密码过长
+    }//重复密码不为空
     else if (ui->edit_password2->text().trimmed().isEmpty())
     {
         QMessageBox::warning(this, "注意", "重复密码不能为空");
@@ -81,7 +77,8 @@ bool Register::CheckInputs()
         QMessageBox::warning(this, "注意", "邮箱不能为空");
         return false;
     }//检查邮箱输入格式
-    else if (!regexMail.exactMatch(ui->edit_mail->text().trimmed()))
+//    else if (!regexMail.exactMatch(ui->edit_mail->text().trimmed()))
+    else if (!ui->edit_mail->text().trimmed().contains(regexMail))
     {
         QMessageBox::warning(this, "注意", "邮箱格式不符");
         return false;
@@ -91,7 +88,8 @@ bool Register::CheckInputs()
         QMessageBox::warning(this, "注意", "电话不能为空");
         return false;
     }//检查电话格式
-    else if (!regexPhone.exactMatch(ui->edit_phone->text().trimmed()))
+//    else if (!regexPhone.exactMatch(ui->edit_phone->text().trimmed()))
+    else if (!ui->edit_phone->text().trimmed().contains(regexPhone))
     {
         QMessageBox::warning(this, "注意", "电话号码长度应为8-11");
         return false;
@@ -130,7 +128,7 @@ void Register::on_button_register_clicked()
         if (DataBase::instance()->IsOpen())
         {
             //连接数据库搜索当前注册输入
-            QSqlQuery query = DataBase::instance()->Query();
+            QSqlQuery query = QSqlQuery(DataBase::instance()->GetDatabase());
             query.prepare(
                 "select register(:username, :password, :phone, :mail, :address)"
             );

@@ -1,8 +1,7 @@
-﻿#ifndef Mouse_H
+#ifndef Mouse_H
 #define Mouse_H
 
 #include <QDialog>
-#include "DataBase.h"
 
 namespace Ui
 {

@@ -1,4 +1,4 @@
-﻿/*********************************************************************
+/*********************************************************************
  * @file   Main.cpp
  * @brief 小鼠管理系统主页面，包含小鼠信息界面、查询界面、死亡列表界面、
  *        喂食记录页面、登录记录页面、用户信息界面
@@ -15,12 +15,15 @@
  *********************************************************************/
 #include "Main.h"
 #include "ui_Main.h"
+
 #include <QMessageBox>
 #include <QSqlQuery>
 #include <QSqlQueryModel>
 #include <QDebug>
 #include <QSqlError>
 #include <QCloseEvent>
+
+#include "DataBase.h"
 
 /**
  * @brief 主界面初始化函数，用于初始化主界面的窗口设置，
@@ -62,13 +65,13 @@ Main::Main(QWidget *parent) : QMainWindow(parent), ui(new Ui::Main)
     D_Help = new Help(this);
 
     // 关于
-    connect(ui->act_about, &QAction::triggered, [this] {QMessageBox::information(this, "关于",
+    connect(ui->act_about, &QAction::triggered, this, [this] {QMessageBox::information(this, "关于",
             "shenzu "
             "Welcomed to use "
             "email: shenzu@mail.nwpu.edu.cn");
                                                        });
     // 关于QT
-    connect(ui->act_Qt, &QAction::triggered, [this] {QMessageBox::aboutQt(this);});
+    connect(ui->act_Qt, &QAction::triggered, this, [this] {QMessageBox::aboutQt(this);});
     // 帮助界面
     connect(ui->act_help, &QAction::triggered, D_Help, &Main::show);
     // 退出
@@ -98,7 +101,7 @@ Main::~Main()
 /*
  * @brief 主界面关闭，提示“确定退出吗”
  */
-void Main::closeEvent(QCloseEvent *event)
+void Main::closeEvent (QCloseEvent *event)
 {
     // 提示“确定退出吗”
     QMessageBox::StandardButton mboxSelect = QMessageBox::question(this, "退出", "确定退出吗",
@@ -237,10 +240,8 @@ void Main::LoadMain()
  */
 void Main::LoadMouse()
 {
-    QSqlQueryModel *queryModel = new QSqlQueryModel(this);
-
     // 执行一个sql语句"SELECT name FROM user"，从用户信息表中找到用户名
-    QSqlQuery query = DataBase::instance()->Query();
+    QSqlQuery query = QSqlQuery(DataBase::instance()->GetDatabase());
 
     query.exec("SELECT name FROM user");
 
@@ -264,7 +265,9 @@ void Main::LoadMouse()
         if (query.isActive())
         {
             qDebug() << "load mouse OK";
-            queryModel->setQuery(query);
+
+            QSqlQueryModel * queryModel = new QSqlQueryModel(this);
+            queryModel->setQuery(std::move(query));
 
             queryModel->setHeaderData(0, Qt::Horizontal, "ID");
             queryModel->setHeaderData(1, Qt::Horizontal, "Name");
@@ -499,10 +502,8 @@ void Main::on_btn_search_clicked()
 
     qDebug() << "Search Query: " << queryString;
 
-    QSqlQuery query = DataBase::instance()->Query();
+    QSqlQuery query = QSqlQuery(DataBase::instance()->GetDatabase());
     query.prepare(queryString);
-
-    QSqlQueryModel *queryModel = new QSqlQueryModel(this);
 
     // 将数据库查询的结果，显示在GUI的表格中
     if (query.exec())
@@ -510,7 +511,9 @@ void Main::on_btn_search_clicked()
         if (query.isActive())
         {
             qDebug() << "Search OK";
-            queryModel->setQuery(query);
+
+            QSqlQueryModel * queryModel = new QSqlQueryModel(this);
+            queryModel->setQuery(std::move(query));
 
             queryModel->setHeaderData(0, Qt::Horizontal, "ID");
             queryModel->setHeaderData(1, Qt::Horizontal, "Barcode");

@@ -1,4 +1,4 @@
-﻿/*********************************************************************
+/*********************************************************************
  * @file   Main.cpp
  * @brief 小鼠详细信息与功能界面，显示ID号、名称、描述、健康程度、负责人、出生日期和死亡日期，
  *        并且具有喂食、出生、死亡、修改信息等功能
@@ -15,10 +15,13 @@
  *********************************************************************/
 #include "Mouse.h"
 #include "ui_Mouse.h"
+
 #include <QMessageBox>
 #include <QSqlQuery>
 #include <QDebug>
 #include <QSqlError>
+
+#include "DataBase.h"
 
  /*
   * @brief 小鼠详细信息与功能界面初始化函数，加载选中小鼠的信息
@@ -77,7 +80,7 @@ bool Mouse::CheckInputs()
 void Mouse::LoadToComboBox()
 {
     // 执行一个sql语句"SELECT id FROM mouse ORDER BY id"，找到所有小鼠的id
-    QSqlQuery query = DataBase::instance()->Query();
+    QSqlQuery query = QSqlQuery(DataBase::instance()->GetDatabase());
     query.exec("SELECT id FROM mouse ORDER BY id");
 
     while (query.next())
@@ -116,7 +119,7 @@ void Mouse::LoadToComboBox()
 void Mouse::LoadMouse(const QString id)
 {
     // 执行一个sql语句"SELECT * FROM mouse WHERE id = :id"，查找小鼠的信息
-    QSqlQuery query = DataBase::instance()->Query();
+    QSqlQuery query = QSqlQuery(DataBase::instance()->GetDatabase());
     query.prepare(
         "SELECT * FROM "
         "mouse "
@@ -175,7 +178,7 @@ void Mouse::on_button_add_clicked()
             if (DataBase::instance()->IsOpen())
             {
                 // 执行一个sql语句"select mouse_birth (:id, :name, :master, :health, :description)"，调用数据库sql函数
-                QSqlQuery query = DataBase::instance()->Query();
+                QSqlQuery query = QSqlQuery(DataBase::instance()->GetDatabase());
 
                 query.prepare(
                     "select mouse_birth (:id, :name, :master, :health, :description)"
@@ -197,7 +200,7 @@ void Mouse::on_button_add_clicked()
                             qDebug() << "Database query OK." << query.lastQuery();
                             ui->box_ID->insertItem(ui->box_ID->count() - 1, ui->edit_id->text().trimmed());
                             Clear();
-                            RefreshMouse();
+                            emit RefreshMouse();
                             return;
                         }
                         else          // sql函数mouse_birth调用失败，主键id重复
@@ -258,7 +261,7 @@ void Mouse::on_button_update_clicked()
             if (DataBase::instance()->IsOpen())
             {
                 // 执行一个sql语句"UPDATE mouse SET name = :name, description = :description , health = :health, master = :master WHERE id = :id"，调用数据库sql函数
-                QSqlQuery query = DataBase::instance()->Query();
+                QSqlQuery query = QSqlQuery(DataBase::instance()->GetDatabase());
 
                 query.prepare(
                     "UPDATE "
@@ -283,7 +286,7 @@ void Mouse::on_button_update_clicked()
                             qDebug() << query.lastError();
                             return;
                         }
-                        RefreshMouse();       // 信息更改成功
+                        emit RefreshMouse();       // 信息更改成功
                         LoadMouse(ui->box_ID->currentText());
                         QMessageBox::information(this, "提示", "更新信息成功!");
                         qDebug() << "Database query OK." << query.lastQuery();
@@ -324,7 +327,7 @@ void Mouse::on_button_delete_clicked()
         if (DataBase::instance()->IsOpen())
         {
             // 执行一个sql语句"call mouse_dead(:id, :description)"，调用数据库sql函数
-            QSqlQuery query = DataBase::instance()->Query();
+            QSqlQuery query = QSqlQuery(DataBase::instance()->GetDatabase());
 
             query.prepare(
                 "call mouse_dead(:id, :description) "
@@ -348,8 +351,8 @@ void Mouse::on_button_delete_clicked()
                     qDebug() << "Delete Mouse: " << ui->box_ID->currentText();
                     ui->box_ID->removeItem(ui->box_ID->currentIndex());
                     Clear();
-                    RefreshMouseDeath();
-                    RefreshMouse();
+                    emit RefreshMouseDeath();
+                    emit RefreshMouse();
                     return;
                 }
             }
@@ -423,7 +426,7 @@ void Mouse::on_btn_feed_clicked()
         if (DataBase::instance()->IsOpen())
         {
             // 执行一个sql语句"call feed_mouse(:id, :name)"，调用数据库sql函数
-            QSqlQuery query = DataBase::instance()->Query();
+            QSqlQuery query = QSqlQuery(DataBase::instance()->GetDatabase());
 
             query.prepare(
                 "call feed_mouse(:id, :name) "
@@ -444,8 +447,8 @@ void Mouse::on_btn_feed_clicked()
                     }
                     QMessageBox::information(this, "提示", "喂养成功!");  // 喂养成功
                     qDebug() << "Database query OK.";
-                    RefreshMouse();
-                    RefreshFeed();
+                    emit RefreshMouse();
+                    emit RefreshFeed();
                     return;
                 }
             }
